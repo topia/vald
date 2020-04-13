@@ -26,20 +26,23 @@ import (
 )
 
 func TestWithCert(t *testing.T) {
+	type T = credentials
 	type args struct {
 		cert string
 	}
 	type want struct {
-		c   *credentials
+		c   *T
 		err error
 	}
 	type test struct {
-		name      string
-		args      args
-		want      want
-		checkFunc func(want, *credentials, error) error
+		name       string
+		args       args
+		want       want
+		beforeFunc (func(args))
+		checkFunc  func(want, *T, error) error
+		afterFunc  func(args)
 	}
-	defaultCheckFunc := func(w want, c *credentials, err error) error {
+	defaultCheckFunc := func(w want, c *T, err error) error {
 		if !errors.Is(err, w.err) {
 			return fmt.Errorf("got error = %v, wantErr %v", err, w.err)
 		}
@@ -55,7 +58,7 @@ func TestWithCert(t *testing.T) {
 				cert: "cert",
 			},
 			want: want{
-				c: &credentials{
+				c: &T{
 					cert: "cert",
 				},
 				err: nil,
@@ -64,17 +67,24 @@ func TestWithCert(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			if tt.beforeFunc != nil {
+				tt.beforeFunc(tt.args)
+			}
+			if tt.afterFunc != nil {
+				defer tt.afterFunc(tt.args)
+			}
+
 			got := WithCert(tt.args.cert)
 
-			c := &credentials{}
-			gotErr := got(c)
+			o := new(T)
+			gotErr := got(o)
 
 			f := defaultCheckFunc
 			if tt.checkFunc != nil {
 				f = tt.checkFunc
 			}
 
-			if err := f(tt.want, c, gotErr); err != nil {
+			if err := f(tt.want, o, gotErr); err != nil {
 				t.Errorf("WithCert() error = %v", gotErr)
 			}
 		})
