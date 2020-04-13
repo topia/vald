@@ -18,6 +18,7 @@
 package tls
 
 import (
+	"crypto/tls"
 	"crypto/x509"
 	"fmt"
 	"io/ioutil"
@@ -31,23 +32,174 @@ func TestNew(t *testing.T) {
 	type args struct {
 		opts []Option
 	}
-	tests := []struct {
-		name    string
-		args    args
-		want    *Config
-		wantErr bool
-	}{
-		// TODO: Add test cases.
+	type want struct {
+		c   *Config
+		err error
+	}
+	type test struct {
+		name string
+		args args
+		// fields      fields
+		want       want
+		beforeFunc func(args)
+		checkFunc  func(want, *Config, error) error
+		afterFunc  func(args)
+	}
+	defaultCheckFunc := func(w want, c *Config, err error) error {
+		if !errors.Is(err, w.err) {
+			return fmt.Errorf("got error = %v, wantErr %v", err, w.err)
+		}
+		if !reflect.DeepEqual(c, w.c) {
+			return fmt.Errorf("got = %v, want %v", c, w.c)
+		}
+		return nil
+	}
+	tests := []test{
+		{
+			name: "returns cfg and nil when option is not empty",
+			args: args{
+				opts: []Option{
+					WithCert("./testdata/dummyServer.crt"),
+					WithKey("./testdata/dummyServer.key"),
+					WithCa("./testdata/dummyCa.pem"),
+				},
+			},
+			want: want{
+				c: func() *Config {
+					var err error
+					c := &credentials{
+						cfg: new(tls.Config),
+					}
+
+					c.cfg.Certificates = make([]tls.Certificate, 1)
+					c.cfg.Certificates[0], err = tls.LoadX509KeyPair("./testdata/dummyServer.crt", "./testdata/dummyServer.key")
+					if err != nil {
+						panic(err)
+					}
+
+					pool := x509.NewCertPool()
+					b, err := ioutil.ReadFile("./testdata/dummyServer.crt")
+					if err != nil {
+						panic(err)
+					}
+					if !pool.AppendCertsFromPEM(b) {
+						panic("faild to add cert")
+					}
+
+					c.cfg.ClientCAs = pool
+					c.cfg.ClientAuth = tls.RequireAndVerifyClientCert
+
+					c.cfg.BuildNameToCertificate()
+					return c.cfg
+				}(),
+				err: nil,
+			},
+			checkFunc: func(w want, c *tls.Config, err error) error {
+				if !errors.Is(err, w.err) {
+					return fmt.Errorf("got error = %v, wantErr %v", err, w.err)
+				}
+
+				if len(c.Certificates) != 1 && len(c.Certificates) != len(w.c.Certificates) {
+					return errors.New("Certificates length is wrong")
+				}
+
+				if got, want := string(w.c.Certificates[0].Certificate[0]), string(c.Certificates[0].Certificate[0]); want != got {
+					return errors.Errorf("Certificates[0] want: %v, but got: %v", want, got)
+				}
+
+				sl := len(c.ClientCAs.Subjects())
+				if sl == 0 {
+					return errors.New("subjects are empty")
+				}
+
+				/*
+					if got, want := c.ClientCAs.Subjects()[sl-1], w.c.ClientCAs.Subjects()[0]; !reflect.DeepEqual(got, want) {
+						return errors.Errorf("ClientCAs.Subjects want: %v, got: %v", want, got)
+					}
+				*/
+
+				if got, want := c.ClientAuth, w.c.ClientAuth; want != got {
+					return errors.Errorf("ClientAuth want: %v, but got: %v", want, got)
+				}
+
+				return nil
+			},
+		},
+		{
+			name: "returns nil and error when option is empty",
+			args: args{},
+			want: want{
+				err: errors.ErrTLSCertOrKeyNotFound,
+			},
+		},
+		{
+			name: "returns nil and error when cert path is empty",
+			args: args{
+				opts: []Option{
+					WithKey("./testdata/dummyServer.key"),
+				},
+			},
+			want: want{
+				err: errors.ErrTLSCertOrKeyNotFound,
+			},
+		},
+		{
+			name: "returns nil and error when key path is empty",
+			args: args{
+				opts: []Option{
+					WithCert("./testdata/dummyServer.crt"),
+				},
+			},
+			want: want{
+				err: errors.ErrTLSCertOrKeyNotFound,
+			},
+		},
+		{
+			name: "returns nil and error when contents of cert file is invalid",
+			args: args{
+				opts: []Option{
+					WithCert("./testdata/invalid.crt"),
+					WithKey("./testdata/dummyServer.key"),
+				},
+			},
+			want: want{
+				err: errors.New("tls: failed to find any PEM data in certificate input"),
+			},
+		},
+		{
+			name: "returns nil and error when contents of ca file is invalid",
+			args: args{
+				opts: []Option{
+					WithCert("./testdata/dummyServer.crt"),
+					WithKey("./testdata/dummyServer.key"),
+					WithCa("./testdata/invalid.pem"),
+				},
+			},
+			want: want{
+				err: errors.ErrCertificationFailed,
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := New(tt.args.opts...)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("New() error = %v, wantErr %v", err, tt.wantErr)
-				return
+			if tt.beforeFunc != nil {
+				tt.beforeFunc(tt.args)
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("New() = %v, want %v", got, tt.want)
+			if tt.afterFunc != nil {
+				defer tt.afterFunc(tt.args)
+			}
+
+			got, gotErr := New(tt.args.opts...)
+
+			f := defaultCheckFunc
+			if tt.checkFunc != nil {
+				f = tt.checkFunc
+			}
+
+			err := f(tt.want, got, gotErr)
+			if err != nil {
+				t.Errorf("New() error = %v", err)
+				return
 			}
 		})
 	}
