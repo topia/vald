@@ -102,7 +102,6 @@ func TestNew(t *testing.T) {
 				if len(c.Certificates) != 1 && len(c.Certificates) != len(w.c.Certificates) {
 					return errors.New("Certificates length is wrong")
 				}
-
 				if got, want := string(w.c.Certificates[0].Certificate[0]), string(c.Certificates[0].Certificate[0]); want != got {
 					return errors.Errorf("Certificates[0] want: %v, but got: %v", want, got)
 				}
@@ -111,7 +110,6 @@ func TestNew(t *testing.T) {
 				if sl == 0 {
 					return errors.New("subjects are empty")
 				}
-
 				/*
 					if got, want := c.ClientCAs.Subjects()[sl-1], w.c.ClientCAs.Subjects()[0]; !reflect.DeepEqual(got, want) {
 						return errors.Errorf("ClientCAs.Subjects want: %v, got: %v", want, got)
@@ -121,7 +119,6 @@ func TestNew(t *testing.T) {
 				if got, want := c.ClientAuth, w.c.ClientAuth; want != got {
 					return errors.Errorf("ClientAuth want: %v, but got: %v", want, got)
 				}
-
 				return nil
 			},
 		},
@@ -248,7 +245,6 @@ func TestNewClientConfig(t *testing.T) {
 				if !errors.Is(err, w.err) {
 					return fmt.Errorf("got error = %v, wantErr %v", err, w.err)
 				}
-
 				if c == nil {
 					return errors.New("config is nil")
 				}
@@ -270,11 +266,9 @@ func TestNewClientConfig(t *testing.T) {
 				if !errors.Is(err, w.err) {
 					return fmt.Errorf("got error = %v, wantErr %v", err, w.err)
 				}
-
 				if c == nil {
 					return errors.New("config is nil")
 				}
-
 				if len(c.Certificates) != 1 {
 					return errors.Errorf("invalid certificate was set. %v", c.Certificates)
 				}
@@ -305,11 +299,9 @@ func TestNewClientConfig(t *testing.T) {
 				if err.Error() != wantErr {
 					return fmt.Errorf("got error = %v, wantErr = %v", err, w.err)
 				}
-
 				if c != nil {
 					return errors.Errorf("config is not nil: %v", c)
 				}
-
 				return nil
 			},
 		},
@@ -384,7 +376,6 @@ func TestNewX509CertPool(t *testing.T) {
 				if err != nil {
 					return errors.Errorf("err is not nil. err: %v", err)
 				}
-
 				if cp == nil {
 					return errors.New("got is nil")
 				}
@@ -392,7 +383,6 @@ func TestNewX509CertPool(t *testing.T) {
 				if len(cp.Subjects()) == 0 {
 					return errors.New("cert files are empty")
 				}
-
 				l := len(cp.Subjects()) - 1
 				if got, want := cp.Subjects()[l], w.cp.Subjects()[0]; !reflect.DeepEqual(got, want) {
 					return errors.Errorf("not equals. want: %v, got: %v", want, got)
@@ -413,11 +403,9 @@ func TestNewX509CertPool(t *testing.T) {
 				if !errors.Is(err, w.err) {
 					return errors.Errorf("err not equals. want: %v, but got: %v", w.err, err)
 				}
-
 				if cp == nil {
 					return errors.Errorf("got is nil: %v", cp)
 				}
-
 				return nil
 			},
 		},
@@ -430,7 +418,6 @@ func TestNewX509CertPool(t *testing.T) {
 				if err == nil {
 					return errors.New("err is nil")
 				}
-
 				if cp != nil {
 					return errors.Errorf("got is not nil: %v", cp)
 				}
@@ -443,11 +430,9 @@ func TestNewX509CertPool(t *testing.T) {
 				if err == nil {
 					return errors.New("err is nil")
 				}
-
 				if cp != nil {
 					return errors.Errorf("got is not nil: %v", cp)
 				}
-
 				return nil
 			},
 		},
