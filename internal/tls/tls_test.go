@@ -162,8 +162,15 @@ func TestNew(t *testing.T) {
 					WithKey("./testdata/dummyServer.key"),
 				},
 			},
-			want: want{
-				err: errors.New("tls: failed to find any PEM data in certificate input"),
+			checkFunc: func(w want, c *Config, err error) error {
+				wantErr := "tls: failed to find any PEM data in certificate input"
+				if err.Error() != wantErr {
+					return fmt.Errorf("got error = %v, wantErr %v", err, w.err)
+				}
+				if !reflect.DeepEqual(c, w.c) {
+					return fmt.Errorf("got = %v, want %v", c, w.c)
+				}
+				return nil
 			},
 		},
 		{
@@ -284,17 +291,6 @@ func TestNewClientConfig(t *testing.T) {
 			want: want{
 				err: errors.ErrCertificationFailed,
 			},
-			checkFunc: func(w want, c *Config, err error) error {
-				if !errors.Is(err, w.err) {
-					return fmt.Errorf("got error = %v, wantErr %v", err, w.err)
-				}
-
-				if c != nil {
-					return errors.Errorf("config is not nil: %v", c)
-				}
-
-				return nil
-			},
 		},
 		{
 			name: "returns nil and error when contents of cert file is invalid",
@@ -304,11 +300,9 @@ func TestNewClientConfig(t *testing.T) {
 					WithKey("./testdata/dummyServer.key"),
 				},
 			},
-			want: want{
-				err: errors.New("tls: failed to find any PEM data in certificate input"),
-			},
 			checkFunc: func(w want, c *Config, err error) error {
-				if !errors.Is(err, w.err) {
+				wantErr := "tls: failed to find any PEM data in certificate input"
+				if err.Error() != wantErr {
 					return fmt.Errorf("got error = %v, wantErr = %v", err, w.err)
 				}
 
@@ -412,11 +406,12 @@ func TestNewX509CertPool(t *testing.T) {
 			args: args{
 				path: "./testdata/invalid.pem",
 			},
+			want: want{
+				err: errors.ErrCertificationFailed,
+			},
 			checkFunc: func(w want, cp *x509.CertPool, err error) error {
-				if err == nil {
-					return errors.New("err is nil")
-				} else if !errors.Is(err, errors.ErrCertificationFailed) {
-					return errors.Errorf("err not equals. want: %v, but got: %v", errors.ErrCertificationFailed, err)
+				if !errors.Is(err, w.err) {
+					return errors.Errorf("err not equals. want: %v, but got: %v", w.err, err)
 				}
 
 				if cp == nil {
