@@ -78,7 +78,7 @@ func TestNew(t *testing.T) {
 					}
 
 					pool := x509.NewCertPool()
-					b, err := ioutil.ReadFile("./testdata/dummyServer.crt")
+					b, err := ioutil.ReadFile("./testdata/dummyCa.pem")
 					if err != nil {
 						panic(err)
 					}
@@ -110,11 +110,9 @@ func TestNew(t *testing.T) {
 				if sl == 0 {
 					return errors.New("subjects are empty")
 				}
-				/*
-					if got, want := c.ClientCAs.Subjects()[sl-1], w.c.ClientCAs.Subjects()[0]; !reflect.DeepEqual(got, want) {
-						return errors.Errorf("ClientCAs.Subjects want: %v, got: %v", want, got)
-					}
-				*/
+				if got, want := c.ClientCAs.Subjects()[sl-1], w.c.ClientCAs.Subjects()[0]; !reflect.DeepEqual(got, want) {
+					return errors.Errorf("ClientCAs.Subjects want: %v, got: %v", want, got)
+				}
 
 				if got, want := c.ClientAuth, w.c.ClientAuth; want != got {
 					return errors.Errorf("ClientAuth want: %v, but got: %v", want, got)
