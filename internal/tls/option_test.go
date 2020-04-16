@@ -74,18 +74,14 @@ func TestWithCert(t *testing.T) {
 			if tt.afterFunc != nil {
 				defer tt.afterFunc(tt.args)
 			}
-
-			got := WithCert(tt.args.cert)
-
-			o := new(T)
-			gotErr := got(o)
-
-			f := defaultCheckFunc
-			if tt.checkFunc != nil {
-				f = tt.checkFunc
+			if tt.checkFunc == nil {
+				tt.checkFunc = defaultCheckFunc
 			}
 
-			if err := f(tt.want, o, gotErr); err != nil {
+			got := WithCert(tt.args.cert)
+			o := new(T)
+			gotErr := got(o)
+			if err := tt.checkFunc(tt.want, o, gotErr); err != nil {
 				t.Errorf("WithCert() error = %v", gotErr)
 			}
 		})
@@ -140,18 +136,14 @@ func TestWithKey(t *testing.T) {
 			if tt.afterFunc != nil {
 				defer tt.afterFunc(tt.args)
 			}
-
-			got := WithKey(tt.args.key)
-
-			o := new(T)
-			gotErr := got(o)
-
-			f := defaultCheckFunc
-			if tt.checkFunc != nil {
-				f = tt.checkFunc
+			if tt.checkFunc == nil {
+				tt.checkFunc = defaultCheckFunc
 			}
 
-			if err := f(tt.want, o, gotErr); err != nil {
+			got := WithKey(tt.args.key)
+			o := new(T)
+			gotErr := got(o)
+			if err := tt.checkFunc(tt.want, o, gotErr); err != nil {
 				t.Errorf("WithKey() error = %v", gotErr)
 			}
 		})
@@ -206,18 +198,15 @@ func TestWithCa(t *testing.T) {
 			if tt.afterFunc != nil {
 				defer tt.afterFunc(tt.args)
 			}
+			if tt.checkFunc == nil {
+				tt.checkFunc = defaultCheckFunc
+			}
 
 			got := WithCa(tt.args.ca)
 
 			o := new(T)
 			gotErr := got(o)
-
-			f := defaultCheckFunc
-			if tt.checkFunc != nil {
-				f = tt.checkFunc
-			}
-
-			if err := f(tt.want, o, gotErr); err != nil {
+			if err := tt.checkFunc(tt.want, o, gotErr); err != nil {
 				t.Errorf("WithCa() error = %v", gotErr)
 			}
 		})
@@ -272,18 +261,15 @@ func TestWithTLSConfig(t *testing.T) {
 			if tt.afterFunc != nil {
 				defer tt.afterFunc(tt.args)
 			}
+			if tt.checkFunc == nil {
+				tt.checkFunc = defaultCheckFunc
+			}
 
 			got := WithTLSConfig(tt.args.cfg)
 
 			o := new(T)
 			gotErr := got(o)
-
-			f := defaultCheckFunc
-			if tt.checkFunc != nil {
-				f = tt.checkFunc
-			}
-
-			if err := f(tt.want, o, gotErr); err != nil {
+			if err := tt.checkFunc(tt.want, o, gotErr); err != nil {
 				t.Errorf("WithTLSConfig() error = %v", gotErr)
 			}
 		})
