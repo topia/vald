@@ -37,9 +37,8 @@ func TestNew(t *testing.T) {
 		err error
 	}
 	type test struct {
-		name string
-		args args
-		// fields      fields
+		name       string
+		args       args
 		want       want
 		beforeFunc func(args)
 		checkFunc  func(want, *Config, error) error
@@ -190,16 +189,12 @@ func TestNew(t *testing.T) {
 			if tt.afterFunc != nil {
 				defer tt.afterFunc(tt.args)
 			}
-
-			got, gotErr := New(tt.args.opts...)
-
-			f := defaultCheckFunc
-			if tt.checkFunc != nil {
-				f = tt.checkFunc
+			if tt.checkFunc == nil {
+				tt.checkFunc = defaultCheckFunc
 			}
 
-			err := f(tt.want, got, gotErr)
-			if err != nil {
+			got, gotErr := New(tt.args.opts...)
+			if err := tt.checkFunc(tt.want, got, gotErr); err != nil {
 				t.Errorf("New() error = %v", err)
 				return
 			}
@@ -216,9 +211,8 @@ func TestNewClientConfig(t *testing.T) {
 		err error
 	}
 	type test struct {
-		name string
-		args args
-		// fields      fields
+		name       string
+		args       args
 		want       want
 		beforeFunc func(args)
 		checkFunc  func(want, *Config, error) error
@@ -312,16 +306,12 @@ func TestNewClientConfig(t *testing.T) {
 			if tt.afterFunc != nil {
 				defer tt.afterFunc(tt.args)
 			}
-
-			got, gotErr := NewClientConfig(tt.args.opts...)
-
-			f := defaultCheckFunc
-			if tt.checkFunc != nil {
-				f = tt.checkFunc
+			if tt.checkFunc == nil {
+				tt.checkFunc = defaultCheckFunc
 			}
 
-			err := f(tt.want, got, gotErr)
-			if err != nil {
+			got, gotErr := NewClientConfig(tt.args.opts...)
+			if err := tt.checkFunc(tt.want, got, gotErr); err != nil {
 				t.Errorf("NewClientConfig() error = %v", err)
 				return
 			}
@@ -338,9 +328,8 @@ func TestNewX509CertPool(t *testing.T) {
 		err error
 	}
 	type test struct {
-		name string
-		args args
-		// fields      fields
+		name       string
+		args       args
 		want       want
 		beforeFunc func(args)
 		checkFunc  func(want, *x509.CertPool, error) error
@@ -443,16 +432,12 @@ func TestNewX509CertPool(t *testing.T) {
 			if tt.afterFunc != nil {
 				defer tt.afterFunc(tt.args)
 			}
-
-			got, gotErr := NewX509CertPool(tt.args.path)
-
-			f := defaultCheckFunc
-			if tt.checkFunc != nil {
-				f = tt.checkFunc
+			if tt.checkFunc == nil {
+				tt.checkFunc = defaultCheckFunc
 			}
 
-			err := f(tt.want, got, gotErr)
-			if err != nil {
+			got, gotErr := NewX509CertPool(tt.args.path)
+			if err := tt.checkFunc(tt.want, got, gotErr); err != nil {
 				t.Errorf("NewX509CertPool() error = %v", err)
 				return
 			}
