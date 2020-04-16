@@ -203,7 +203,6 @@ func TestWithCa(t *testing.T) {
 			}
 
 			got := WithCa(tt.args.ca)
-
 			o := new(T)
 			gotErr := got(o)
 			if err := tt.checkFunc(tt.want, o, gotErr); err != nil {
@@ -266,7 +265,6 @@ func TestWithTLSConfig(t *testing.T) {
 			}
 
 			got := WithTLSConfig(tt.args.cfg)
-
 			o := new(T)
 			gotErr := got(o)
 			if err := tt.checkFunc(tt.want, o, gotErr); err != nil {
