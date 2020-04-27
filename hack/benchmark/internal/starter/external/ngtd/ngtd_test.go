@@ -22,8 +22,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/cockroachdb/errors"
 	"github.com/vdaas/vald/hack/benchmark/internal/starter"
+	"github.com/vdaas/vald/internal/errors"
 )
 
 func TestNew(t *testing.T) {

@@ -21,7 +21,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/vdaas/vald/internal/errors"
+	"github.com/cockroachdb/errors"
 )
 
 func TestErrMySQLNotFoundIdentity_Error(t *testing.T) {
@@ -41,7 +41,7 @@ func TestErrMySQLNotFoundIdentity_Error(t *testing.T) {
 	}
 	defaultCheckFunc := func(w want, got string) error {
 		if !reflect.DeepEqual(got, w.want) {
-			return errors.Errorf("got = %v, want %v", got, w.want)
+			return Errorf("got = %v, want %v", got, w.want)
 		}
 		return nil
 	}
@@ -257,7 +257,7 @@ func TestIsErrMySQLInvalidArgument(t *testing.T) {
 	}
 	defaultCheckFunc := func(w want, got bool) error {
 		if !reflect.DeepEqual(got, w.want) {
-			return errors.Errorf("got = %v, want %v", got, w.want)
+			return Errorf("got = %v, want %v", got, w.want)
 		}
 		return nil
 	}
