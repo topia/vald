@@ -4,8 +4,6 @@
 
 - [Overview](#overview)
 - [Data Flow](#data-flow)
-  - [Insert](#insert)
-  - [Search](#search)
 - [Components](#components)
   - [Vald Filter](#vald-filter)
     - [Vald Ingress Filter](#vald-ingress-filter)
@@ -45,81 +43,11 @@ Vald is based on [Kubernetes](https://kubernetes.io/) architecture. Before you r
 
 In this section, we will explain the data flow in Vald which is the most important for users.
 
-<style>
-.tab {
-  overflow: hidden;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
-}
+<img src="../../assets/doc/all_flow.svg" />
 
-/* Style the buttons that are used to open the tab content */
-.tab button {
-  background-color: inherit;
-  float: left;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 14px 16px;
-  transition: 0.3s;
-}
+Please read the following sections for more details.
 
-/* Change background color of buttons on hover */
-.tab button:hover {
-  background-color: #ddd;
-}
-
-/* Create an active/current tablink class */
-.tab button.active {
-  background-color: #ccc;
-}
-
-/* Style the tab content */
-.tabcontent {
-  display: none;
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-top: none;
-}
-</style>
-<script>
-function changetab(evt, cityName) {
-  // Declare all variables
-  var i, tabcontent, tablinks;
-
-  // Get all elements with class="tabcontent" and hide them
-  tabcontent = document.getElementsByClassName("tabcontent");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
-
-  // Get all elements with class="tablinks" and remove the class "active"
-  tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
-  }
-
-  // Show the current tab, and add an "active" class to the button that opened the tab
-  document.getElementById(cityName).style.display = "block";
-  evt.currentTarget.className += " active";
-}
-</script>
-<div class="tab">
-  <button class="tablinks" onclick="changetab(event, 'Insert')">Insert</button>
-  <button class="tablinks" onclick="changetab(event, 'Search')">Search</button>
-</div>
-
-<!-- Tab content -->
-<div id="Insert" class="tabcontent">
-  <h3>London</h3>
-  <p>London is the capital city of England.</p>
-</div>
-
-<div id="Search" class="tabcontent">
-  <h3>Paris</h3>
-  <p>Paris is the capital of France.</p>
-</div>
-
-### Insert
+<details><summary>Insert flow</summary><br />
 
 <img src="../../assets/doc/insert_flow.svg" />
 
@@ -141,7 +69,9 @@ When the user inserts data into Vald:
 13. Vald Backup Manager will store the compressed data to the persistent layer.
 ```
 
-### Search
+</details>
+
+<details><summary>Search flow</summary><br />
 
 <img src="../../assets/doc/search_flow.svg" />
 
@@ -164,6 +94,8 @@ When the user searches a vector from Vald:
 14. Vald Meta Gateway returns the searching result with the vector ID to the Vald Filter Gateway.
 15. Vald Filter Gateway will forward the request to Vald Egress Gateway to filter the final result.
 ```
+
+</details>
 
 <!-- ### Update -->
 
