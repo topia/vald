@@ -9,7 +9,7 @@ replace (
 	github.com/coreos/etcd => go.etcd.io/etcd v0.5.0-alpha.5.0.20200425165423-262c93980547
 	github.com/docker/docker => github.com/moby/moby v17.12.0-ce-rc1.0.20200309214505-aa6a9891b09c+incompatible
 	github.com/envoyproxy/protoc-gen-validate => github.com/envoyproxy/protoc-gen-validate v0.3.0-java
-	github.com/go-sql-driver/mysql => github.com/go-sql-driver/mysql v1.5.1-0.20200529085006-d2e52fca0b65
+	github.com/go-sql-driver/mysql => github.com/go-sql-driver/mysql v1.5.1-0.20200531100419-12508c83901b
 	github.com/gocql/gocql => github.com/gocql/gocql v0.0.0-20200526081602-cd04bd7f22a7
 	github.com/gogo/protobuf => github.com/gogo/protobuf v1.3.1
 	github.com/gophercloud/gophercloud => github.com/gophercloud/gophercloud v0.11.0
@@ -27,7 +27,7 @@ replace (
 require (
 	contrib.go.opencensus.io/exporter/jaeger v0.2.0
 	contrib.go.opencensus.io/exporter/prometheus v0.1.0
-	github.com/aws/aws-sdk-go v1.31.7
+	github.com/aws/aws-sdk-go v1.31.8
 	github.com/cespare/xxhash/v2 v2.1.1
 	github.com/cockroachdb/errors v0.0.0-00010101000000-000000000000
 	github.com/danielvladco/go-proto-gql/pb v0.6.1
@@ -42,7 +42,7 @@ require (
 	github.com/gorilla/mux v1.7.1
 	github.com/hashicorp/go-version v1.2.0
 	github.com/json-iterator/go v1.1.9
-	github.com/klauspost/compress v1.10.6
+	github.com/klauspost/compress v1.10.7
 	github.com/kpango/fastime v1.0.16
 	github.com/kpango/fuid v0.0.0-20190507064958-80435564606b
 	github.com/kpango/gache v1.2.1
@@ -59,11 +59,11 @@ require (
 	gocloud.dev v0.19.0
 	golang.org/x/mod v0.3.0 // indirect
 	golang.org/x/sys v0.0.0-20200202164722-d101bd2416d5
-	golang.org/x/tools v0.0.0-20200530233709-52effbd89c51 // indirect
+	golang.org/x/tools v0.0.0-20200601175630-2caf76543d99 // indirect
 	gonum.org/v1/hdf5 v0.0.0-20200504100616-496fefe91614
 	gonum.org/v1/netlib v0.0.0-20200317120129-c5a04cffd98a // indirect
 	gonum.org/v1/plot v0.7.0
-	google.golang.org/genproto v0.0.0-20200528191852-705c0b31589b
+	google.golang.org/genproto v0.0.0-20200601130524-0f60399e6634
 	google.golang.org/grpc v1.29.1
 	gopkg.in/yaml.v2 v2.3.0
 	k8s.io/api v0.18.3
