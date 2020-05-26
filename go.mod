@@ -5,29 +5,29 @@ go 1.14
 replace (
 	github.com/Azure/go-autorest => github.com/Azure/go-autorest v14.1.1+incompatible
 	github.com/boltdb/bolt => github.com/boltdb/bolt v1.3.1
-	github.com/cockroachdb/errors => github.com/cockroachdb/errors v1.2.5-0.20200521081835-9833fdfac54c
+	github.com/cockroachdb/errors => github.com/cockroachdb/errors v1.2.5-0.20200526111402-489491acc692
 	github.com/coreos/etcd => go.etcd.io/etcd v0.5.0-alpha.5.0.20200425165423-262c93980547
 	github.com/docker/docker => github.com/moby/moby v17.12.0-ce-rc1.0.20200309214505-aa6a9891b09c+incompatible
 	github.com/envoyproxy/protoc-gen-validate => github.com/envoyproxy/protoc-gen-validate v0.3.0-java
-	github.com/go-sql-driver/mysql => github.com/go-sql-driver/mysql v1.5.1-0.20200525102840-8c3a2d9049b4
-	github.com/gocql/gocql => github.com/gocql/gocql v0.0.0-20200519160334-799061058e31
+	github.com/go-sql-driver/mysql => github.com/go-sql-driver/mysql v1.5.1-0.20200529085006-d2e52fca0b65
+	github.com/gocql/gocql => github.com/gocql/gocql v0.0.0-20200526081602-cd04bd7f22a7
 	github.com/gogo/protobuf => github.com/gogo/protobuf v1.3.1
 	github.com/gophercloud/gophercloud => github.com/gophercloud/gophercloud v0.11.0
 	github.com/gorilla/mux => github.com/gorilla/mux v1.7.5-0.20200517040254-948bec34b516
 	github.com/gorilla/websocket => github.com/gorilla/websocket v1.4.2
 	github.com/tensorflow/tensorflow => github.com/tensorflow/tensorflow v2.1.0+incompatible
 	golang.org/x/crypto => golang.org/x/crypto v0.0.0-20200510223506-06a226fb4e37
-	k8s.io/api => k8s.io/api v0.18.2
-	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.18.2
-	k8s.io/apimachinery => k8s.io/apimachinery v0.18.2
-	k8s.io/client-go => k8s.io/client-go v0.18.2
+	k8s.io/api => k8s.io/api v0.18.3
+	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.18.3
+	k8s.io/apimachinery => k8s.io/apimachinery v0.18.3
+	k8s.io/client-go => k8s.io/client-go v0.18.3
 	sigs.k8s.io/controller-runtime => sigs.k8s.io/controller-runtime v0.6.0
 )
 
 require (
 	contrib.go.opencensus.io/exporter/jaeger v0.2.0
 	contrib.go.opencensus.io/exporter/prometheus v0.1.0
-	github.com/aws/aws-sdk-go v1.31.4
+	github.com/aws/aws-sdk-go v1.31.7
 	github.com/cespare/xxhash/v2 v2.1.1
 	github.com/cockroachdb/errors v0.0.0-00010101000000-000000000000
 	github.com/danielvladco/go-proto-gql/pb v0.6.1
@@ -59,11 +59,11 @@ require (
 	gocloud.dev v0.19.0
 	golang.org/x/mod v0.3.0 // indirect
 	golang.org/x/sys v0.0.0-20200202164722-d101bd2416d5
-	golang.org/x/tools v0.0.0-20200522201501-cb1345f3a375 // indirect
+	golang.org/x/tools v0.0.0-20200530233709-52effbd89c51 // indirect
 	gonum.org/v1/hdf5 v0.0.0-20200504100616-496fefe91614
 	gonum.org/v1/netlib v0.0.0-20200317120129-c5a04cffd98a // indirect
 	gonum.org/v1/plot v0.7.0
-	google.golang.org/genproto v0.0.0-20200521103424-e9a78aa275b7
+	google.golang.org/genproto v0.0.0-20200528191852-705c0b31589b
 	google.golang.org/grpc v1.29.1
 	gopkg.in/yaml.v2 v2.3.0
 	k8s.io/api v0.18.3
