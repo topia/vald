@@ -25,7 +25,6 @@ import (
 	"github.com/vdaas/vald/internal/errors"
 	"github.com/vdaas/vald/internal/runner"
 	"github.com/vdaas/vald/pkg/agent/core/ngt/config"
-
 	"go.uber.org/goleak"
 )
 

@@ -14,37 +14,29 @@
 // limitations under the License.
 //
 
-// Package grpc provides grpc server logic
+// Package grpc provides generic functionality for grpc
 package grpc
 
 import (
-	"context"
 	"reflect"
 	"testing"
 
-	"github.com/vdaas/vald/apis/grpc/manager/replication/controller"
-	"github.com/vdaas/vald/apis/grpc/payload"
 	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/pkg/manager/replication/controller/service"
 	"go.uber.org/goleak"
 )
 
-func TestNew(t *testing.T) {
-	type args struct {
-		opts []Option
-	}
+func TestRecoverInterceptor(t *testing.T) {
 	type want struct {
-		want controller.ReplicationServer
+		want UnaryServerInterceptor
 	}
 	type test struct {
 		name       string
-		args       args
 		want       want
-		checkFunc  func(want, controller.ReplicationServer) error
-		beforeFunc func(args)
-		afterFunc  func(args)
+		checkFunc  func(want, UnaryServerInterceptor) error
+		beforeFunc func()
+		afterFunc  func()
 	}
-	defaultCheckFunc := func(w want, got controller.ReplicationServer) error {
+	defaultCheckFunc := func(w want, got UnaryServerInterceptor) error {
 		if !reflect.DeepEqual(got, w.want) {
 			return errors.Errorf("got = %v, want %v", got, w.want)
 		}
@@ -55,9 +47,6 @@ func TestNew(t *testing.T) {
 		/*
 		   {
 		       name: "test_case_1",
-		       args: args {
-		           opts: nil,
-		       },
 		       want: want{},
 		       checkFunc: defaultCheckFunc,
 		   },
@@ -68,9 +57,6 @@ func TestNew(t *testing.T) {
 		   func() test {
 		       return test {
 		           name: "test_case_2",
-		           args: args {
-		           opts: nil,
-		           },
 		           want: want{},
 		           checkFunc: defaultCheckFunc,
 		       }
@@ -82,16 +68,16 @@ func TestNew(t *testing.T) {
 		t.Run(test.name, func(tt *testing.T) {
 			defer goleak.VerifyNone(t)
 			if test.beforeFunc != nil {
-				test.beforeFunc(test.args)
+				test.beforeFunc()
 			}
 			if test.afterFunc != nil {
-				defer test.afterFunc(test.args)
+				defer test.afterFunc()
 			}
 			if test.checkFunc == nil {
 				test.checkFunc = defaultCheckFunc
 			}
 
-			got := New(test.args.opts...)
+			got := RecoverInterceptor()
 			if err := test.checkFunc(test.want, got); err != nil {
 				tt.Errorf("error = %v", err)
 			}
@@ -100,33 +86,20 @@ func TestNew(t *testing.T) {
 	}
 }
 
-func Test_server_ReplicationInfo(t *testing.T) {
-	type args struct {
-		ctx context.Context
-		in1 *payload.Empty
-	}
-	type fields struct {
-		controller service.Replicator
-	}
+func TestRecoverStreamInterceptor(t *testing.T) {
 	type want struct {
-		wantRes *payload.Replication_Agents
-		err     error
+		want StreamServerInterceptor
 	}
 	type test struct {
 		name       string
-		args       args
-		fields     fields
 		want       want
-		checkFunc  func(want, *payload.Replication_Agents, error) error
-		beforeFunc func(args)
-		afterFunc  func(args)
+		checkFunc  func(want, StreamServerInterceptor) error
+		beforeFunc func()
+		afterFunc  func()
 	}
-	defaultCheckFunc := func(w want, gotRes *payload.Replication_Agents, err error) error {
-		if !errors.Is(err, w.err) {
-			return errors.Errorf("got error = %v, want %v", err, w.err)
-		}
-		if !reflect.DeepEqual(gotRes, w.wantRes) {
-			return errors.Errorf("got = %v, want %v", gotRes, w.wantRes)
+	defaultCheckFunc := func(w want, got StreamServerInterceptor) error {
+		if !reflect.DeepEqual(got, w.want) {
+			return errors.Errorf("got = %v, want %v", got, w.want)
 		}
 		return nil
 	}
@@ -135,13 +108,6 @@ func Test_server_ReplicationInfo(t *testing.T) {
 		/*
 		   {
 		       name: "test_case_1",
-		       args: args {
-		           ctx: nil,
-		           in1: nil,
-		       },
-		       fields: fields {
-		           controller: nil,
-		       },
 		       want: want{},
 		       checkFunc: defaultCheckFunc,
 		   },
@@ -152,13 +118,6 @@ func Test_server_ReplicationInfo(t *testing.T) {
 		   func() test {
 		       return test {
 		           name: "test_case_2",
-		           args: args {
-		           ctx: nil,
-		           in1: nil,
-		           },
-		           fields: fields {
-		           controller: nil,
-		           },
 		           want: want{},
 		           checkFunc: defaultCheckFunc,
 		       }
@@ -170,20 +129,17 @@ func Test_server_ReplicationInfo(t *testing.T) {
 		t.Run(test.name, func(tt *testing.T) {
 			defer goleak.VerifyNone(t)
 			if test.beforeFunc != nil {
-				test.beforeFunc(test.args)
+				test.beforeFunc()
 			}
 			if test.afterFunc != nil {
-				defer test.afterFunc(test.args)
+				defer test.afterFunc()
 			}
 			if test.checkFunc == nil {
 				test.checkFunc = defaultCheckFunc
 			}
-			s := &server{
-				controller: test.fields.controller,
-			}
 
-			gotRes, err := s.ReplicationInfo(test.args.ctx, test.args.in1)
-			if err := test.checkFunc(test.want, gotRes, err); err != nil {
+			got := RecoverStreamInterceptor()
+			if err := test.checkFunc(test.want, got); err != nil {
 				tt.Errorf("error = %v", err)
 			}
 
