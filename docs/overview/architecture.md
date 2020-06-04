@@ -18,11 +18,11 @@ Before reading this document, you need to have some understanding of the basic i
 
 ### Concept
 
-Here is the concepts of Vald.
+Here are the concepts of Vald.
 
 - Microservice based
 
-  Vald is designed based on the microservice architecture. Vald components are highly decoupled into small components and connected with each other, which increase the overall agility and maintainability of Vald.
+  Vald is designed based on the microservice architecture. Vald components are highly decoupled into small components and connected, which increases the overall agility and maintainability of Vald.
 
 - Containerized
 
@@ -30,11 +30,11 @@ Here is the concepts of Vald.
 
 - Observability & Real-time monitoring
 
-  Vald support pprof and prometheus to monitor and tracing the log in every Vald components.
+  Vald support pprof and Prometheus to monitor and trace the log in every Vald components.
 
 - Distributed
 
-  All the data and index are distributed to Vald Agnet in the Vald cluster so whenever you search a vector, all Vald agents can process parallelly and merge the result by Vald LB Gateway.
+  All the data and index are distributed to Vald Agents in the Vald cluster so whenever you search a vector, all Vald agents can process parallelly and merge the result by Vald LB Gateway.
 
 - Kubernetes based
 
@@ -46,7 +46,7 @@ Here is the concepts of Vald.
 
   - Horizontal scalable
 
-    All Vald components are designed and implemented to be scalable. You can add any node in kubernetes cluster at anytime to scale your kuberentes cluster, or changing the number of replicas to scale Vald.
+    All Vald components are designed and implemented to be scalable. You can add any node in kubernetes cluster at any time to scale your kuberentes cluster, or changing the number of replicas to scale Vald.
 
   - Auto-healing
 
@@ -54,11 +54,11 @@ Here is the concepts of Vald.
 
   - Data persistency
 
-    Vald implements backup features. Whenever a Vald Agent is down and kubernetes start a new Vald Agent instance, the data is automatically restore to the new instance to prevent data loss.
+    Vald implements backup features. Whenever a Vald Agent is down and kubernetes start a new Vald Agent instance, the data is automatically restored to the new instance to prevent data loss.
 
   - Easy to manage
 
-    We implement helm chart deployment to easily deploy Vald on your kubernetes cluster and we implemented custom resource to manage and operate with Vald.
+    We implement helm chart deployment to easily deploy Vald on your kubernetes cluster and we implemented custom resources to manage and operate with Vald.
   
 ## Data Flow
 
